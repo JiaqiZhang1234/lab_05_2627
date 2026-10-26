@@ -23,13 +23,28 @@ Note that some columns have been dropped from `simpsons_script_lines` to make th
 - [ ] Load all four of the files
 
 ::: {.solution}
+```{r}
+simpsons_characters <- read_csv("data/simpsons/simpsons_characters.csv")
+simpsons_episodes <- read_csv("data/simpsons/simpsons_episodes.csv")
+simpsons_locations <- read_csv("data/simpsons/simpsons_locations.csv")
+simpsons_script_lines <- read_csv("data/simpsons/simpsons_script_lines.csv")
 
+simpsons_characters
+simpsons_episodes 
+simpsons_locations
+simpsons_script_lines 
+```
 :::
 
 - [ ] Before joining anything, look at the first few rows of each table. What does one row of each table represent? Which columns link the tables together, and would you describe each link as one-to-one, one-to-many or many-to-many?
 
 ::: {.solution}
-
+```{r}
+head(simpsons_characters) #one character 
+head(simpsons_episodes) #one episode
+head(simpsons_locations) #one location
+head(simpsons_script_lines) #one script line
+```
 :::
 
 
@@ -40,6 +55,12 @@ Answer the following research questions using `join` functions.
 - [ ] Which episodes feature the most characters? (Hint: look at the `n_distinct` function. Is every script line spoken by a character?)
 
 ::: {.solution}
+```{r}
+simpsons_script_lines |>
+  inner_join(simpsons_characters, by=c("character_id"="id")) |>
+  inner_join(simpsons_locations, by=c("location_id"="id"))
+  
+```
 
 :::
 
@@ -67,6 +88,16 @@ Answer the following research questions:
 - [ ] In how many episodes are donuts / doughnuts mentioned? (Hint: be careful about capitalisation.)
 
 ::: {.solution}
+```{r}
+simpsons_script_lines |>
+  mutate(length = str_length(spoken_words)) |>
+  arrange(desc(length)) |>
+  head(1) |>
+  inner_join(simpsons_episodes, by = c("episode_id" = "id")) |>
+  select(episode_id, length, spoken_words)
+
+
+```
 
 :::
 
@@ -92,6 +123,9 @@ first_episodes
 - [ ] `excel_date` contains the same dates stored as Excel date numbers. Convert these into dates too. (Hint: see the Week 5 notes.)
 
 ::: {.solution}
+```{r}
+
+```
 
 :::
 
@@ -129,6 +163,9 @@ Answer the following research questions:
 - [ ] Why might this day have such a low trading volume?
 
 ::: {.solution}
+```{r}
+
+```
 
 :::
 
